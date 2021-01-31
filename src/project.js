@@ -1158,6 +1158,7 @@ window.__require = function e(t, n, o) {
             this.lineNode.children[0].active = !1,
             this.fruitS = ["PuTaoS", "YingTaoS", "JuZiS", "NingMengS", "MiHouTaoS", "XiHongShiS", "TaoS", "BoLuoS", "YeZiS", "XiGuaS"],
             this.createOneFruit(firstFruit) // 第一个水果
+
         }, t.prototype.update = function (e) {
           a.default.GameUpdateCtrl, this.lineNode.children[0].y - n.Instance.fruitHeigth < 100 && this.lineNode.children[0].y - n.Instance.fruitHeigth >= 0 && (this.lineNode.children[0].active = !0), this.lineNode.children[0].y - n.Instance.fruitHeigth > 100 && (this.lineNode.children[0].active = !1)
         }, t.prototype.end = function () {
@@ -1198,6 +1199,60 @@ window.__require = function e(t, n, o) {
         },
           // 生成水果
           t.prototype.createOneFruit = function (e) {
+
+          //设置重力感应
+
+             if (window.DeviceOrientationEvent) {
+                  window.addEventListener("deviceorientation", gravityListener, true);
+             }
+
+            // iOS 13+
+           else if (typeof DeviceMotionEvent.requestPermission === 'function' ) {
+               DeviceOrientationEvent.requestPermission()
+                   .then(response => {
+                     if (response == 'granted') {
+                       window.addEventListener('deviceorientation', gravityListener, true)
+                     }
+                   })
+                   .catch(console.error)
+            }
+            else{
+                  alert("未检测到传感器 :)")
+              }
+
+            function gravityListener(event) {
+              //alert(event.alpha);
+              let alpha = Math.floor(event.alpha);
+              let beta = Math.floor(event.beta);
+              let gamma = Math.floor(event.gamma);
+              let a = 0;
+
+              //程度参数
+              let c = 2.4;
+
+              //方向参数
+              let left = -1;
+              let right = 1;
+              if (beta > 90) {
+                if (alpha < 75) {
+                  a = (90 - alpha) * left * c;
+                } else if (alpha > 105) {
+                  a = (alpha - 90) * right * c;
+                }
+                a = a * 2;
+              } else if (beta < 90) {
+                if (alpha > 105) {
+                  //向左，角度与 alpha 正相关
+                  a = c * (alpha - 90) * left;
+                } else if (alpha < 75) {
+                  //向右，角度与 alpha 负相关
+                  a = (90 - alpha) * c * right;
+                }
+              }
+              console.log(a);
+              cc.director.getPhysicsManager().gravity = cc.v2(a, -350)
+            }
+
             var t = this, n = cc.instantiate(this.fruitPre);
             n.parent = this.lineNode;
             n.getComponent(cc.Sprite).spriteFrame = d.default.Instance.fruit[e];
