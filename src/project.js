@@ -12,6 +12,7 @@ if (selectModal) {
 }
 
 
+
 window.__require = function e(t, n, o) {
   function c(i, r) {
     if (!n[i]) {
@@ -1205,17 +1206,6 @@ window.__require = function e(t, n, o) {
              if (window.DeviceOrientationEvent) {
                   window.addEventListener("deviceorientation", gravityListener, true);
              }
-
-            // iOS 13+
-           else if (typeof DeviceMotionEvent.requestPermission === 'function' ) {
-               DeviceOrientationEvent.requestPermission()
-                   .then(response => {
-                     if (response == 'granted') {
-                       window.addEventListener('deviceorientation', gravityListener, true)
-                     }
-                   })
-                   .catch(console.error)
-            }
             else{
                   alert("未检测到传感器 :)")
               }
@@ -1239,7 +1229,7 @@ window.__require = function e(t, n, o) {
                 } else if (alpha > 105) {
                   a = (alpha - 90) * right * c;
                 }
-                a = a * 2;
+                a = a * 2.7;
               } else if (beta < 90) {
                 if (alpha > 105) {
                   //向左，角度与 alpha 正相关
