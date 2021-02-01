@@ -1907,8 +1907,13 @@ window.__require = function e(t, n, o) {
 
       //重力处理Listener实现
       onDeviceMotionEvent: function (e) {
-        cc.director.getPhysicsManager().gravity = cc.v2(e.acc.x*150, -350)
-        console.log(e.acc.x + "  " + e.acc.y)
+        let lr = 1;
+        if(e.acc.x < 0)
+          lr = -1;
+        let x = Math.abs(e.acc.x * 220) ;
+        let t = Math.pow(1.05, x)* lr
+        cc.director.getPhysicsManager().gravity = cc.v2(t, -350);
+        console.log(t)
       },
 
       play: function () {
