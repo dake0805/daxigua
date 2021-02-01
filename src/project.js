@@ -1912,6 +1912,7 @@ window.__require = function e(t, n, o) {
           lr = -1;
         let x = Math.abs(e.acc.x * 220) ;
         let t = Math.pow(1.05, x)* lr
+        if(t>1500) t = 600;
         cc.director.getPhysicsManager().gravity = cc.v2(t, -350);
         console.log(t)
       },
