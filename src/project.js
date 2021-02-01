@@ -1203,45 +1203,45 @@ window.__require = function e(t, n, o) {
 
           //设置重力感应
 
-             if (window.DeviceOrientationEvent) {
-                  window.addEventListener("deviceorientation", gravityListener, true);
-             }
-            else{
-                  alert("未检测到传感器 :)")
-              }
-
-            function gravityListener(event) {
-              //alert(event.alpha);
-              let alpha = Math.floor(event.alpha);
-              let beta = Math.floor(event.beta);
-              let gamma = Math.floor(event.gamma);
-              let a = 0;
-
-              //程度参数
-              let c = 2.4;
-
-              //方向参数
-              let left = -1;
-              let right = 1;
-              if (beta > 90) {
-                if (alpha < 75) {
-                  a = (90 - alpha) * left * c;
-                } else if (alpha > 105) {
-                  a = (alpha - 90) * right * c;
-                }
-                a = a * 2.7;
-              } else if (beta < 90) {
-                if (alpha > 105) {
-                  //向左，角度与 alpha 正相关
-                  a = c * (alpha - 90) * left;
-                } else if (alpha < 75) {
-                  //向右，角度与 alpha 负相关
-                  a = (90 - alpha) * c * right;
-                }
-              }
-              console.log(a);
-              cc.director.getPhysicsManager().gravity = cc.v2(a, -350)
-            }
+            //  if (window.DeviceOrientationEvent) {
+            //       window.addEventListener("deviceorientation", gravityListener, true);
+            //  }
+            // else{
+            //       alert("未检测到传感器 :)")
+            //   }
+            //
+            // function gravityListener(event) {
+            //   //alert(event.alpha);
+            //   let alpha = Math.floor(event.alpha);
+            //   let beta = Math.floor(event.beta);
+            //   let gamma = Math.floor(event.gamma);
+            //   let a = 0;
+            //
+            //   //程度参数
+            //   let c = 2.4;
+            //
+            //   //方向参数
+            //   let left = -1;
+            //   let right = 1;
+            //   if (beta > 90) {
+            //     if (alpha < 75) {
+            //       a = (90 - alpha) * left * c;
+            //     } else if (alpha > 105) {
+            //       a = (alpha - 90) * right * c;
+            //     }
+            //     a = a * 2.7;
+            //   } else if (beta < 90) {
+            //     if (alpha > 105) {
+            //       //向左，角度与 alpha 正相关
+            //       a = c * (alpha - 90) * left;
+            //     } else if (alpha < 75) {
+            //       //向右，角度与 alpha 负相关
+            //       a = (90 - alpha) * c * right;
+            //     }
+            //   }
+            //   console.log(a);
+            //   cc.director.getPhysicsManager().gravity = cc.v2(a, -350)
+            // }
 
             var t = this, n = cc.instantiate(this.fruitPre);
             n.parent = this.lineNode;
@@ -1892,9 +1892,25 @@ window.__require = function e(t, n, o) {
         gameOverT2: cc.Label,
         gameOverToEnd: cc.Node
       },
+
+
       onLoad: function () {
+        //设置开启重力 Listener
+        cc.systemEvent.setAccelerometerEnabled(!0), cc.systemEvent.on(cc.SystemEvent.EventType.DEVICEMOTION, this.onDeviceMotionEvent, this);
+
         cc.director.getCollisionManager().enabled = !0, cc.director.getPhysicsManager().enabled = !0, this.gameOveEndBool = !1, this.gameOverNum = 0, this.gameWidth = cc.winSize.width, this.gameHeight = cc.winSize.height, o.playNum, o.playNum++, c.loadingLayer("panel/LinkIconSpr"), o.mainGameJs = this, o.publicGameBool || this.play()
       },
+      onDestroy: function () {
+        cc.systemEvent.off(cc.SystemEvent.EventType.DEVICEMOTION, this.onDeviceMotionEvent, this)
+      },
+
+
+      //重力处理Listener实现
+      onDeviceMotionEvent: function (e) {
+        cc.director.getPhysicsManager().gravity = cc.v2(e.acc.x*150, -350)
+        console.log(e.acc.x + "  " + e.acc.y)
+      },
+
       play: function () {
         console.log(1);
         var e = this;
@@ -3916,6 +3932,8 @@ window.__require = function e(t, n, o) {
         }
       },
       onLoad: function () {
+        cc.systemEvent.setAccelerometerEnabled(true);
+        cc.systemEvent.on(cc.SystemEvent.EventType.DEVICEMOTION, this.onDeviceMotionEvent, this);
         void 0 != ToolsJs && (ToolsJs.PrefabArrJs = this, ToolsJs.SpriteFrameJs = this, ToolsJs.AudioArrJs = this), this.addPrefabs(), this.addSpriteFrame(), this.audioClipDic = {};
         for (var e = 0; e < this.audiosArr.length; e++) {
           var t = this.audiosArr[e];
@@ -3965,6 +3983,7 @@ window.__require = function e(t, n, o) {
         startT: cc.Label
       },
       onLoad: function () {
+
         a.publicGameBool && c.init(), this.showInfoT.string = c.gameInfoText, this.startT.string = c.txtStartText, this.node.on("touchend", function (e) {
           this.node.x = -2e3
         }, this)
@@ -4199,3 +4218,4 @@ window.__require = function e(t, n, o) {
     "./GameManager": "GameManager"
   }]
 }, {}, ["HttpManagerJs", "LanguageSetJs", "LoadSceneJs", "AniTools", "MainGameJS", "ToolsJs", "resArr", "MainManage", "AddScore", "AdjusWithHeight", "AudioManager", "AutoDestroy", "DataManager", "EffectCenter", "FailedUi", "GameFunction", "GameManager", "InputController", "KnifeCollision", "MainGameUi", "NewAttribute", "PhysicsParticle", "Rocker", "RotateAround", "Stack", "WallUpdate", "fruitData", "peaCannonAI", "startPanel", "wineObsmove", "winerCollision", "GameConfig", "GameUiTools", "DynamicLoad", "EffectSprite", "PlayerInfo", "PoolManager", "RandomFly", "RenderWater", "Shake", "SpriteManager", "Toast", "Utils", "bfPrefabJs", "gameOverJs", "linkHttpIconJs", "startGameJs", "use_v2.1.x_cc.Action"]);
+
